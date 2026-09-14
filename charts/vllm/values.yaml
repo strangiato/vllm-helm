@@ -5,11 +5,11 @@
 replicaCount: 1
 
 image:
-  registry: quay.io
-  repository: vllm/vllm
+  registry: registry.redhat.io
+  repository: rhaii/vllm-cuda-rhel9
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "3.5.1"
 
 configuration:
   env: {}
@@ -18,7 +18,7 @@ configuration:
   shm:
     size: 2Gi
   hfModelDownload:
-    enabled: true
+    enabled: false
     huggingfaceToken: null
   cache:
     type: emptyDir # type can be one of pvc or emptyDir
