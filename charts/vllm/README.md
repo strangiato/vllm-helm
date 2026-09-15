@@ -57,7 +57,7 @@ For a complete list of all configuration options, see the [Values](#values) sect
 | configuration.cache.type | string | `"emptyDir"` | Cache volume type for /home/vllm/.cache. Must be one of pvc or emptyDir. |
 | configuration.env | object | `{}` | Additional environment variables for the vLLM container (merged into the chart ConfigMap). HF_HOME and HF_HUB_OFFLINE are managed by the chart. |
 | configuration.extraArgs | list | `["--disable-access-log-for-endpoints=/health,/metrics,/ping"]` | Extra arguments passed to `vllm serve`. See https://docs.vllm.ai/en/latest/serving/engine_args.html |
-| configuration.model.emptyDir | object | `{}` |  |
+| configuration.model.emptyDir | object | `{}` | The emptyDir configuration when type is emptyDir. |
 | configuration.model.hfModelDownload.enabled | bool | `true` | Download the model from Hugging Face at startup when type is pvc or emptyDir. Sets HF_HUB_OFFLINE=0 and mounts model storage read/write. |
 | configuration.model.hfModelDownload.huggingfaceToken | string | `nil` | Hugging Face token (HF_TOKEN) when hfModelDownload.enabled is true. Required for gated models. |
 | configuration.model.image.pullPolicy | string | `"IfNotPresent"` | Pull policy for the model OCI image when using modelCar or artifact storage. |
@@ -65,7 +65,7 @@ For a complete list of all configuration options, see the [Values](#values) sect
 | configuration.model.image.type | string | `"modelCar"` | OCI model packaging when model.type is image. Must be one of artifact or modelCar. |
 | configuration.model.mountPath | string | `"/mnt/models"` | Mount path for model files (HF_HOME) and the local path passed to vllm serve when type is image. |
 | configuration.model.name | string | `"ibm-granite/granite-3.3-2b-instruct"` |  |
-| configuration.model.pvc.accessModes[0] | string | `"ReadWriteOnce"` |  |
+| configuration.model.pvc.accessModes | list | `["ReadWriteOnce"]` | Access modes for the model PVC. |
 | configuration.model.pvc.size | string | `"20Gi"` | PVC storage size when model.type is pvc, or emptyDir sizeLimit when model.type is emptyDir. |
 | configuration.model.type | string | `"image"` | Model storage type. Must be one of image, pvc, or emptyDir. |
 | configuration.shm.size | string | `"2Gi"` | Size of the in-memory emptyDir mounted at /dev/shm. |
