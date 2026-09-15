@@ -50,77 +50,55 @@ For a complete list of all configuration options, see the [Values](#values) sect
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` |  |
+| affinity | object | `{}` | Pod affinity rules for the vLLM workload. |
 | configuration.cache.emptyDir | object | `{}` |  |
 | configuration.cache.pvc.accessModes[0] | string | `"ReadWriteOnce"` |  |
-| configuration.cache.size | string | `"20Gi"` |  |
-| configuration.cache.type | string | `"emptyDir"` |  |
-| configuration.env | object | `{}` |  |
-| configuration.extraArgs[0] | string | `"--disable-access-log-for-endpoints=/health,/metrics,/ping"` |  |
+| configuration.cache.size | string | `"20Gi"` | Size of the cache volume when type is emptyDir or the PVC request when type is pvc. |
+| configuration.cache.type | string | `"emptyDir"` | Cache volume type for /home/vllm/.cache. Must be one of pvc or emptyDir. |
+| configuration.env | object | `{}` | Additional environment variables for the vLLM container (merged into the chart ConfigMap). HF_HOME and HF_HUB_OFFLINE are managed by the chart. |
+| configuration.extraArgs | list | `["--disable-access-log-for-endpoints=/health,/metrics,/ping"]` | Extra arguments passed to `vllm serve`. See https://docs.vllm.ai/en/latest/serving/engine_args.html |
 | configuration.model.emptyDir | object | `{}` |  |
-| configuration.model.hfModelDownload.enabled | bool | `true` |  |
-| configuration.model.hfModelDownload.huggingfaceToken | string | `nil` |  |
-| configuration.model.image.pullPolicy | string | `"IfNotPresent"` |  |
-| configuration.model.image.reference | string | `"quay.io/redhat-ai-services/modelcar-catalog:granite-3.3-2b-instruct"` |  |
-| configuration.model.image.type | string | `"modelCar"` |  |
-| configuration.model.mountPath | string | `"/mnt/models"` |  |
+| configuration.model.hfModelDownload.enabled | bool | `true` | Download the model from Hugging Face at startup when type is pvc or emptyDir. Sets HF_HUB_OFFLINE=0 and mounts model storage read/write. |
+| configuration.model.hfModelDownload.huggingfaceToken | string | `nil` | Hugging Face token (HF_TOKEN) when hfModelDownload.enabled is true. Required for gated models. |
+| configuration.model.image.pullPolicy | string | `"IfNotPresent"` | Pull policy for the model OCI image when using modelCar or artifact storage. |
+| configuration.model.image.reference | string | `"quay.io/redhat-ai-services/modelcar-catalog:granite-3.3-2b-instruct"` | OCI reference for model.image.type artifact (image volume) or modelCar sidecar/init image. |
+| configuration.model.image.type | string | `"modelCar"` | OCI model packaging when model.type is image. Must be one of artifact or modelCar. |
+| configuration.model.mountPath | string | `"/mnt/models"` | Mount path for model files (HF_HOME) and the local path passed to vllm serve when type is image. |
 | configuration.model.name | string | `"ibm-granite/granite-3.3-2b-instruct"` |  |
 | configuration.model.pvc.accessModes[0] | string | `"ReadWriteOnce"` |  |
-| configuration.model.pvc.size | string | `"20Gi"` |  |
-| configuration.model.type | string | `"image"` |  |
-| configuration.shm.size | string | `"2Gi"` |  |
-| deploymentStrategy.type | string | `"RollingUpdate"` |  |
-| fullnameOverride | string | `""` |  |
-| image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.registry | string | `"registry.redhat.io"` |  |
-| image.repository | string | `"rhaii/vllm-cuda-rhel9"` |  |
-| image.tag | string | `"3.5.1"` |  |
-| imagePullSecrets | list | `[]` |  |
-| livenessProbe.failureThreshold | int | `2` |  |
-| livenessProbe.httpGet.path | string | `"/health"` |  |
-| livenessProbe.httpGet.port | string | `"http"` |  |
-| livenessProbe.periodSeconds | int | `60` |  |
-| livenessProbe.timeoutSeconds | int | `3` |  |
-| nameOverride | string | `""` |  |
-| nodeSelector | object | `{}` |  |
-| podAnnotations."prometheus.io/path" | string | `"/metrics"` |  |
-| podAnnotations."prometheus.io/port" | string | `"8000"` |  |
-| podLabels | object | `{}` |  |
-| podSecurityContext.runAsNonRoot | bool | `true` |  |
-| readinessProbe.failureThreshold | int | `3` |  |
-| readinessProbe.httpGet.path | string | `"/v1/models"` |  |
-| readinessProbe.httpGet.port | string | `"http"` |  |
-| readinessProbe.periodSeconds | int | `30` |  |
-| readinessProbe.timeoutSeconds | int | `3` |  |
-| replicaCount | int | `1` |  |
-| resources.limits."nvidia.com/gpu" | int | `1` |  |
-| resources.limits.cpu | int | `4` |  |
-| resources.limits.memory | string | `"16Gi"` |  |
-| resources.requests."nvidia.com/gpu" | int | `1` |  |
-| resources.requests.cpu | int | `2` |  |
-| resources.requests.memory | string | `"8Gi"` |  |
-| route.annotations | object | `{}` |  |
-| route.enabled | bool | `true` |  |
-| route.subdomain | string | `""` |  |
-| route.tls.enabled | bool | `true` |  |
-| route.tls.insecureEdgeTerminationPolicy | string | `"Redirect"` |  |
-| securityContext.allowPrivilegeEscalation | bool | `false` |  |
-| securityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| securityContext.readOnlyRootFilesystem | bool | `false` |  |
-| service.port | int | `8000` |  |
-| service.type | string | `"ClusterIP"` |  |
-| serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.automount | bool | `true` |  |
-| serviceAccount.create | bool | `true` |  |
-| serviceAccount.name | string | `""` |  |
-| startupProbe.failureThreshold | int | `180` |  |
-| startupProbe.httpGet.path | string | `"/health"` |  |
-| startupProbe.httpGet.port | string | `"http"` |  |
-| startupProbe.periodSeconds | int | `10` |  |
-| startupProbe.timeoutSeconds | int | `3` |  |
-| tolerations[0].effect | string | `"NoSchedule"` |  |
-| tolerations[0].key | string | `"nvidia.com/gpu"` |  |
-| tolerations[0].operator | string | `"Exists"` |  |
+| configuration.model.pvc.size | string | `"20Gi"` | PVC storage size when model.type is pvc, or emptyDir sizeLimit when model.type is emptyDir. |
+| configuration.model.type | string | `"image"` | Model storage type. Must be one of image, pvc, or emptyDir. |
+| configuration.shm.size | string | `"2Gi"` | Size of the in-memory emptyDir mounted at /dev/shm. |
+| deploymentStrategy.type | string | `"RollingUpdate"` | Deployment strategy type (for example RollingUpdate or Recreate). |
+| fullnameOverride | string | `""` | String to fully override fullname template. |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the vLLM runtime image. |
+| image.registry | string | `"registry.redhat.io"` | Container image registry for the vLLM runtime image. |
+| image.repository | string | `"rhaii/vllm-cuda-rhel9"` | Container image repository for the vLLM runtime image. |
+| image.tag | string | `"3.5.1"` | Image tag for the vLLM runtime image. Defaults to the chart appVersion when empty. |
+| imagePullSecrets | list | `[]` | Secrets for pulling images from private registries. See https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/ |
+| livenessProbe | object | `{"failureThreshold":2,"httpGet":{"path":"/health","port":"http"},"periodSeconds":60,"timeoutSeconds":3}` | Liveness probe for the vLLM HTTP endpoint. |
+| nameOverride | string | `""` | String to partially override fullname template (will maintain the release name). |
+| nodeSelector | object | `{}` | Node selector for scheduling the vLLM pod. |
+| podAnnotations | object | `{"prometheus.io/path":"/metrics","prometheus.io/port":"8000"}` | Annotations added to the pod template. |
+| podLabels | object | `{}` | Labels added to the pod template. |
+| podSecurityContext | object | `{"runAsNonRoot":true}` | Security context for the vLLM pod. |
+| readinessProbe | object | `{"failureThreshold":3,"httpGet":{"path":"/v1/models","port":"http"},"periodSeconds":30,"timeoutSeconds":3}` | Readiness probe for the vLLM HTTP endpoint. |
+| replicaCount | int | `1` | Number of vLLM pod replicas. |
+| resources | object | `{"limits":{"cpu":4,"memory":"16Gi","nvidia.com/gpu":1},"requests":{"cpu":2,"memory":"8Gi","nvidia.com/gpu":1}}` | CPU, memory, and accelerator resources for the vLLM container. |
+| route.annotations | object | `{}` | Annotations added to the Route. |
+| route.enabled | bool | `true` | Create an OpenShift Route for external access to the vLLM API. |
+| route.subdomain | string | `""` | Optional Route subdomain (cluster-dependent). |
+| route.tls.enabled | bool | `true` | Enable TLS termination on the Route. |
+| route.tls.insecureEdgeTerminationPolicy | string | `"Redirect"` | OpenShift Route insecure edge termination policy when TLS is enabled. |
+| securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":false}` | Security context for the vLLM container. |
+| service.port | int | `8000` | Port exposed by the Service and used by vllm serve. |
+| service.type | string | `"ClusterIP"` | Kubernetes Service type for the vLLM API. |
+| serviceAccount.annotations | object | `{}` | Annotations added to the ServiceAccount. |
+| serviceAccount.automount | bool | `true` | Automount the ServiceAccount API token into the pod. |
+| serviceAccount.create | bool | `true` | Create a dedicated ServiceAccount for the vLLM pod. |
+| serviceAccount.name | string | `""` | ServiceAccount name. If empty and create is true, the chart fullname is used. |
+| startupProbe | object | `{"failureThreshold":180,"httpGet":{"path":"/health","port":"http"},"periodSeconds":10,"timeoutSeconds":3}` | Startup probe for the vLLM HTTP endpoint. |
+| tolerations | list | `[{"effect":"NoSchedule","key":"nvidia.com/gpu","operator":"Exists"}]` | Tolerations for scheduling the vLLM pod onto GPU (or other tainted) nodes. |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
