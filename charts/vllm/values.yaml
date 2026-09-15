@@ -22,7 +22,8 @@ imagePullSecrets: []
 configuration:
   env: {}
   modelReference: ibm-granite/granite-3.3-2b-instruct  # not necessary if you're using an image
-  extraArgs: []
+  extraArgs:
+    - --disable-access-log-for-endpoints /health,/metrics,/ping
   shm:
     size: 2Gi
   hfModelDownload:
