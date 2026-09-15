@@ -58,6 +58,7 @@ configuration:
     pvc:
       # -- PVC storage size when model.type is pvc, or emptyDir sizeLimit when model.type is emptyDir.
       size: 20Gi
+      # -- Access modes for the model PVC.
       accessModes:
         - ReadWriteOnce
     image:
@@ -67,6 +68,7 @@ configuration:
       reference: "quay.io/redhat-ai-services/modelcar-catalog:granite-3.3-2b-instruct"
       # -- Pull policy for the model OCI image when using modelCar or artifact storage.
       pullPolicy: IfNotPresent
+    # -- The emptyDir configuration when type is emptyDir.
     emptyDir: {}
 
 serviceAccount:
