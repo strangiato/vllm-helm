@@ -1,3 +1,4 @@
+{{- include "vllm.validateAll" . -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -130,7 +131,6 @@ spec:
             readOnly: {{ not .Values.configuration.model.hfModelDownload.enabled }}
         {{- else if eq .Values.configuration.model.type "emptyDir" }}
           emptyDir:
-            sizeLimit: {{ .Values.configuration.model.pvc.size }}
             {{- with .Values.configuration.model.emptyDir }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
