@@ -23,7 +23,7 @@ configuration:
   env: {}
   modelReference: ibm-granite/granite-3.3-2b-instruct  # not necessary if you're using an image
   extraArgs:
-    - --disable-access-log-for-endpoints /health,/metrics,/ping
+    - --disable-access-log-for-endpoints=/health,/metrics,/ping
   shm:
     size: 2Gi
   hfModelDownload:
@@ -37,7 +37,7 @@ configuration:
       accessModes:
         - ReadWriteOnce
   modelStorage:
-    type: pvc  # type can be one of pvc, image, or emptyDir
+    type: image  # type can be one of pvc, image, or emptyDir
     size: 20Gi
     mountPath: /tmp/hf_home
     emptyDir: {}
@@ -45,8 +45,8 @@ configuration:
       accessModes:
         - ReadWriteOnce
     image:
-      type: artifact # type can be one of artifact or modelCar
-      reference: ""
+      type: modelCar # type can be one of artifact or modelCar
+      reference: "quay.io/redhat-ai-services/modelcar-catalog:granite-3.3-2b-instruct"
       pullPolicy: IfNotPresent
 
 serviceAccount:
