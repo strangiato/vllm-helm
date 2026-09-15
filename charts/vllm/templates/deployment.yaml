@@ -64,6 +64,7 @@ spec:
               {{ .Values.configuration.model.name }}
               {{- end }}
               --port {{ .Values.service.port }}
+              --served-model-name {{ .Values.configuration.model.name | default .Release.Name | quote }}
               {{- range .Values.configuration.extraArgs }}
               {{ quote . }}
               {{- end }}
