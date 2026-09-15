@@ -2,7 +2,13 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+nameOverride: ""
+fullnameOverride: ""
+
 replicaCount: 1
+
+deploymentStrategy:
+  type: RollingUpdate
 
 image:
   registry: registry.redhat.io
@@ -11,6 +17,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "3.5.1"
 
+imagePullSecrets: []
+
 configuration:
   env: {}
   modelReference: ibm-granite/granite-3.3-2b-instruct  # not necessary if you're using an image
@@ -18,7 +26,7 @@ configuration:
   shm:
     size: 2Gi
   hfModelDownload:
-    enabled: false
+    enabled: true
     huggingfaceToken: null
   cache:
     type: emptyDir # type can be one of pvc or emptyDir
@@ -39,13 +47,6 @@ configuration:
       type: artifact # type can be one of artifact or modelCar
       reference: ""
       pullPolicy: IfNotPresent
-
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-deploymentStrategy:
-  type: RollingUpdate
 
 serviceAccount:
   # Specifies whether a service account should be created
