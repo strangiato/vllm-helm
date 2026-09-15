@@ -9,9 +9,9 @@ A Helm chart to deploy vLLM on OpenShift
 To access charts from this from the cli repository add it:
 
 ```sh
-helm repo add <todo> <todo>
-helm repo update <todo>
-helm upgrade -i [release-name] <todo>/vllm
+helm repo add rhai https://rhai-code.github.io/vllm/
+helm repo update rhai
+helm upgrade -i [release-name] rhai/vllm
 ```
 
 To include a chart from this repository in an umbrella chart, include it in your dependencies in your `Chart.yaml` file.
@@ -29,7 +29,7 @@ appVersion: "1.16.0"
 dependencies:
   - name: "vllm"
     version: "0.3.0"
-    repository: "<todo>
+    repository: "https://rhai-code.github.io/vllm/"
 ```
 
 ## Usage
@@ -39,7 +39,7 @@ dependencies:
 For a basic vLLM deployment with default settings:
 
 ```sh
-helm upgrade -i my-vllm <todo>/vllm
+helm upgrade -i my-vllm rhai/vllm
 ```
 
 ## Configuration
