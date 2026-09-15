@@ -73,6 +73,9 @@ spec:
             - secretRef:
                 name: {{ include "vllm.fullname" . }}
             {{- end }}
+          env:
+            - name: HOME
+              value: /home
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -99,6 +102,8 @@ spec:
               mountPath: /tmp
             - name: cache
               mountPath: /home/vllm/.cache
+            - name: home
+              mountPath: /home
         {{- if and (eq .Values.configuration.modelStorage.type "image") (eq .Values.configuration.modelStorage.image.type "modelCar") }}
         - name: modelcar
           image: {{ .Values.configuration.modelStorage.image.reference }}
@@ -146,6 +151,8 @@ spec:
             medium: Memory
             sizeLimit: {{ .Values.configuration.shm.size }}
         - name: tmp
+          emptyDir: {}
+        - name: home
           emptyDir: {}
         - name: cache
           {{- if eq .Values.configuration.cache.type "pvc" }}
