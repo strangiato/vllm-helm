@@ -1,5 +1,4 @@
-{{- if and (eq .Values.configuration.modelStorage.type "image") (eq .Values.configuration.modelStorage.image.type "modelCar") }}
----
+{{- if include "vllm.modelCarEnabled" . }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

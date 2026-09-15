@@ -6,8 +6,8 @@ metadata:
   labels:
     {{- include "vllm.labels" . | nindent 4 }}
 data:
-  HF_HOME: {{ quote .Values.configuration.modelStorage.mountPath }}
-  {{- if .Values.configuration.hfModelDownload.enabled }}
+  HF_HOME: {{ quote .Values.configuration.model.mountPath }}
+  {{- if and (ne .Values.configuration.model.type "image") .Values.configuration.model.hfModelDownload.enabled }}
   HF_HUB_OFFLINE: "0"
   {{- else }}
   HF_HUB_OFFLINE: "1"

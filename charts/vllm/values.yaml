@@ -21,14 +21,10 @@ imagePullSecrets: []
 
 configuration:
   env: {}
-  modelReference: ibm-granite/granite-3.3-2b-instruct  # not necessary if you're using an image
   extraArgs:
     - --disable-access-log-for-endpoints=/health,/metrics,/ping
   shm:
     size: 2Gi
-  hfModelDownload:
-    enabled: true
-    huggingfaceToken: null
   cache:
     type: emptyDir # type can be one of pvc or emptyDir
     size: 20Gi
@@ -36,18 +32,23 @@ configuration:
     pvc:
       accessModes:
         - ReadWriteOnce
-  modelStorage:
-    type: image  # type can be one of pvc, image, or emptyDir
-    size: 20Gi
-    mountPath: /tmp/hf_home
-    emptyDir: {}
+  model:
+    name: ibm-granite/granite-3.3-2b-instruct
+    type: image # type can be one of image, pvc, or emptyDir
+    mountPath: /mnt/models
+    hfModelDownload:
+      # used for type pvc or emptyDir to download the model from Hugging Face
+      enabled: true
+      huggingfaceToken: null
     pvc:
+      size: 20Gi
       accessModes:
         - ReadWriteOnce
     image:
       type: modelCar # type can be one of artifact or modelCar
       reference: "quay.io/redhat-ai-services/modelcar-catalog:granite-3.3-2b-instruct"
       pullPolicy: IfNotPresent
+    emptyDir: {}
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -83,7 +84,7 @@ service:
   port: 8000
 
 route:
-  enabled: false
+  enabled: true
   annotations: {}
   tls:
     enabled: true

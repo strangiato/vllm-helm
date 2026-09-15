@@ -31,11 +31,11 @@ spec:
       serviceAccountName: {{ include "vllm.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if and (eq .Values.configuration.modelStorage.type "image") (eq .Values.configuration.modelStorage.image.type "modelCar") }}
+      {{- if include "vllm.modelCarEnabled" . }}
       shareProcessNamespace: true
       initContainers:
         - name: modelcar-init
-          image: {{ .Values.configuration.modelStorage.image.reference }}
+          image: {{ .Values.configuration.model.image.reference }}
           command:
             - /app/entrypoint.sh
           args:
@@ -57,10 +57,10 @@ spec:
             - -c
             - >-
               vllm serve
-              {{- if eq .Values.configuration.modelStorage.type "image" }}
-              {{ .Values.configuration.modelStorage.mountPath }}
+              {{- if eq .Values.configuration.model.type "image" }}
+              {{ .Values.configuration.model.mountPath }}
               {{- else }}
-              {{ .Values.configuration.modelReference }}
+              {{ .Values.configuration.model.name }}
               {{- end }}
               --port {{ .Values.service.port }}
               {{- range .Values.configuration.extraArgs }}
@@ -69,7 +69,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "vllm.fullname" . }}
-            {{- if and (ne .Values.configuration.modelStorage.type "image") .Values.configuration.hfModelDownload.enabled }}
+            {{- if and (ne .Values.configuration.model.type "image") .Values.configuration.model.hfModelDownload.enabled }}
             - secretRef:
                 name: {{ include "vllm.fullname" . }}
             {{- end }}
@@ -95,7 +95,7 @@ spec:
           {{- end }}
           volumeMounts:
             - name: model-storage
-              mountPath: {{ .Values.configuration.modelStorage.mountPath }}
+              mountPath: {{ .Values.configuration.model.mountPath }}
             - name: shm
               mountPath: /dev/shm
             - name: tmp
@@ -104,48 +104,48 @@ spec:
               mountPath: /home/vllm/.cache
             - name: home
               mountPath: /home
-        {{- if and (eq .Values.configuration.modelStorage.type "image") (eq .Values.configuration.modelStorage.image.type "modelCar") }}
+        {{- if include "vllm.modelCarEnabled" . }}
         - name: modelcar
-          image: {{ .Values.configuration.modelStorage.image.reference }}
+          image: {{ .Values.configuration.model.image.reference }}
           command:
             - /app/entrypoint.sh
           args:
             - mount
-            - {{ .Values.configuration.modelStorage.mountPath }}
+            - {{ .Values.configuration.model.mountPath }}
           {{- with .Values.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
             - name: model-storage
-              mountPath: {{ .Values.configuration.modelStorage.mountPath }}
+              mountPath: {{ .Values.configuration.model.mountPath }}
             - name: modelcar-mount
               mountPath: /app
         {{- end }}
       volumes:
         - name: model-storage
-        {{- if eq .Values.configuration.modelStorage.type "pvc" }}
+        {{- if eq .Values.configuration.model.type "pvc" }}
           persistentVolumeClaim:
             claimName: {{ include "vllm.fullname" . }}-storage
-            readOnly: {{ not .Values.configuration.hfModelDownload.enabled }}
-        {{- else if eq .Values.configuration.modelStorage.type "emptyDir" }}
+            readOnly: {{ not .Values.configuration.model.hfModelDownload.enabled }}
+        {{- else if eq .Values.configuration.model.type "emptyDir" }}
           emptyDir:
-            sizeLimit: {{ .Values.configuration.modelStorage.size }}
-            {{- with .Values.configuration.modelStorage.emptyDir }}
+            sizeLimit: {{ .Values.configuration.model.pvc.size }}
+            {{- with .Values.configuration.model.emptyDir }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-        {{- else if eq .Values.configuration.modelStorage.type "image" }}
-        {{- if eq .Values.configuration.modelStorage.image.type "artifact" }}
+        {{- else if eq .Values.configuration.model.type "image" }}
+        {{- if eq .Values.configuration.model.image.type "artifact" }}
           image:
-            {{- toYaml .Values.configuration.modelStorage.image | nindent 12 }}
-        {{- else if eq .Values.configuration.modelStorage.image.type "modelCar" }}
+            {{- omit .Values.configuration.model.image "type" | toYaml | nindent 12 }}
+        {{- else if eq .Values.configuration.model.image.type "modelCar" }}
           emptyDir: {}
         - name: modelcar-mount
           configMap:
             name:  {{ include "vllm.fullname" . }}-modelcar-mount
             defaultMode: 493
         {{- end }} {{/* artifact vs modelCar */}}
-        {{- end }} {{/* modelStorage.type */}}
+        {{- end }} {{/* model.type */}}
         - name: shm
           emptyDir:
             medium: Memory

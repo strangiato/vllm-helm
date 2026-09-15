@@ -60,3 +60,7 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "vllm.modelCarEnabled" -}}
+{{- and (eq .Values.configuration.model.type "image") (eq .Values.configuration.model.image.type "modelCar") }}
+{{- end }}
