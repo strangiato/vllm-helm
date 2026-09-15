@@ -162,7 +162,6 @@ spec:
             readOnly: false
           {{- else if eq .Values.configuration.cache.type "emptyDir" }}
           emptyDir:
-            sizeLimit: {{ .Values.configuration.cache.size }}
             {{- with .Values.configuration.cache.emptyDir }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

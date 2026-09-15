@@ -43,5 +43,5 @@ spec:
   {{- end }}
   resources:
     requests:
-      storage: {{ .Values.configuration.cache.size }}
+      storage: {{ .Values.configuration.cache.pvc.size }}
 {{- end }}

@@ -35,10 +35,12 @@ configuration:
   cache:
     # -- Cache volume type for /home/vllm/.cache. Must be one of pvc or emptyDir.
     type: emptyDir
-    # -- Size of the cache volume when type is emptyDir or the PVC request when type is pvc.
-    size: 20Gi
+    # -- The emptyDir configuration when type is emptyDir.
     emptyDir: {}
     pvc:
+      # -- Size of the cache volume when type is pvc (storage request).
+      size: 20Gi
+      # -- Access modes for the cache PVC.
       accessModes:
         - ReadWriteOnce
   model:
