@@ -73,7 +73,8 @@ securityContext:
   capabilities:
     drop:
     - ALL
-  readOnlyRootFilesystem: true
+  # KServe rhaii/vllm-cuda-rhel9 pods use readOnlyRootFilesystem: false so plugins can load
+  readOnlyRootFilesystem: false
   allowPrivilegeEscalation: false
 
 service:
