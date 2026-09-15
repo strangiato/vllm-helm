@@ -51,9 +51,9 @@ For a complete list of all configuration options, see the [Values](#values) sect
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Pod affinity rules for the vLLM workload. |
-| configuration.cache.emptyDir | object | `{}` |  |
-| configuration.cache.pvc.accessModes[0] | string | `"ReadWriteOnce"` |  |
-| configuration.cache.size | string | `"20Gi"` | Size of the cache volume when type is emptyDir or the PVC request when type is pvc. |
+| configuration.cache.emptyDir | object | `{}` | The emptyDir configuration when type is emptyDir. |
+| configuration.cache.pvc.accessModes | list | `["ReadWriteOnce"]` | Access modes for the cache PVC. |
+| configuration.cache.pvc.size | string | `"20Gi"` | Size of the cache volume when type is pvc (storage request). |
 | configuration.cache.type | string | `"emptyDir"` | Cache volume type for /home/vllm/.cache. Must be one of pvc or emptyDir. |
 | configuration.env | object | `{}` | Additional environment variables for the vLLM container (merged into the chart ConfigMap). HF_HOME and HF_HUB_OFFLINE are managed by the chart. |
 | configuration.extraArgs | list | `["--disable-access-log-for-endpoints=/health,/metrics,/ping"]` | Extra arguments passed to `vllm serve`. See https://docs.vllm.ai/en/latest/serving/engine_args.html |
