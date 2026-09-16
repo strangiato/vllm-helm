@@ -64,7 +64,7 @@ For a complete list of all configuration options, see the [Values](#values) sect
 | configuration.model.image.reference | string | `"quay.io/redhat-ai-services/modelcar-catalog:granite-3.3-2b-instruct"` | OCI reference for model.image.type artifact (image volume) or modelCar sidecar/init image. |
 | configuration.model.image.type | string | `"modelCar"` | OCI model packaging when model.type is image. Must be one of artifact or modelCar. |
 | configuration.model.mountPath | string | `"/mnt/models"` | Mount path for model files (HF_HOME) and the local path passed to vllm serve when type is image. |
-| configuration.model.name | string | `"ibm-granite/granite-3.3-2b-instruct"` |  |
+| configuration.model.name | string | `"ibm-granite/granite-3.3-2b-instruct"` | Hugging Face model ID used when model.type is pvc or emptyDir,  and as --served-model-name when set (otherwise the Helm release name is used). |
 | configuration.model.pvc.accessModes | list | `["ReadWriteOnce"]` | Access modes for the model PVC. |
 | configuration.model.pvc.size | string | `"20Gi"` | PVC storage size when model.type is pvc, or emptyDir sizeLimit when model.type is emptyDir. |
 | configuration.model.type | string | `"image"` | Model storage type. Must be one of image, pvc, or emptyDir. |
