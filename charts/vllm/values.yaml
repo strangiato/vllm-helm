@@ -44,7 +44,8 @@ configuration:
       accessModes:
         - ReadWriteOnce
   model:
-    # -- Hugging Face model ID used when model.type is pvc or emptyDir, and as --served-model-name when set (otherwise the Helm release name is used).
+    # -- Hugging Face model ID used when model.type is pvc or emptyDir, 
+    # and as --served-model-name when set (otherwise the Helm release name is used).
     name: ibm-granite/granite-3.3-2b-instruct
     # -- Model storage type. Must be one of image, pvc, or emptyDir.
     type: image
