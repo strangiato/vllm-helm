@@ -62,5 +62,5 @@ Create the name of the service account to use
 {{- end }}
 
 {{- define "vllm.modelCarEnabled" -}}
-{{- and (eq .Values.configuration.model.type "image") (eq .Values.configuration.model.image.type "modelCar") }}
-{{- end }}
+{{- if and (eq .Values.configuration.model.type "image") (eq .Values.configuration.model.image.type "modelCar") -}}true{{- end -}}
+{{- end -}}

@@ -1,4 +1,4 @@
-{{- if include "vllm.modelCarEnabled" . }}
+{{- if eq (include "vllm.modelCarEnabled" .) "true" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

@@ -32,7 +32,7 @@ spec:
       serviceAccountName: {{ include "vllm.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if include "vllm.modelCarEnabled" . }}
+      {{- if eq (include "vllm.modelCarEnabled" .) "true" }}
       shareProcessNamespace: true
       initContainers:
         - name: modelcar-init
@@ -106,7 +106,7 @@ spec:
               mountPath: /home/vllm/.cache
             - name: home
               mountPath: /home
-        {{- if include "vllm.modelCarEnabled" . }}
+        {{- if eq (include "vllm.modelCarEnabled" .) "true" }}
         - name: modelcar
           image: {{ .Values.configuration.model.image.reference }}
           command:
