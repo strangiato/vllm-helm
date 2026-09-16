@@ -8,11 +8,14 @@ on:
 jobs:
   docs-build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v7
       - name: Build helm-docs
         uses: docker://docker.io/jnorwood/helm-docs:latest
-      - uses: EndBug/add-and-commit@v9
+      - name: Commit updated docs
+        uses: EndBug/add-and-commit@v9
         with:
           message: 'Automatic build of docs from GitHub Action'
   release:
