@@ -82,7 +82,7 @@ For a complete list of all configuration options, see the [Values](#values) sect
 | podAnnotations | object | `{"prometheus.io/path":"/metrics","prometheus.io/port":"8000"}` | Annotations added to the pod template. |
 | podLabels | object | `{}` | Labels added to the pod template. |
 | podSecurityContext | object | `{"runAsNonRoot":true}` | Security context for the vLLM pod. |
-| readinessProbe | object | `{"failureThreshold":3,"httpGet":{"path":"/v1/models","port":"http"},"periodSeconds":30,"timeoutSeconds":3}` | Readiness probe for the vLLM HTTP endpoint. |
+| readinessProbe | object | `{"failureThreshold":3,"httpGet":{"path":"/health","port":"http"},"periodSeconds":30,"timeoutSeconds":3}` | Readiness probe for the vLLM HTTP endpoint. |
 | replicaCount | int | `1` | Number of vLLM pod replicas. |
 | resources | object | `{"limits":{"cpu":4,"memory":"16Gi","nvidia.com/gpu":1},"requests":{"cpu":2,"memory":"8Gi","nvidia.com/gpu":1}}` | CPU, memory, and accelerator resources for the vLLM container. |
 | route.annotations | object | `{}` | Annotations added to the Route. |
