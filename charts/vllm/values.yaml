@@ -145,7 +145,7 @@ livenessProbe:
 # -- Readiness probe for the vLLM HTTP endpoint.
 readinessProbe:
   httpGet:
-    path: /v1/models
+    path: /health
     port: http
   failureThreshold: 3
   periodSeconds: 30
